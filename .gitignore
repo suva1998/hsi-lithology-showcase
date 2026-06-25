@@ -1,0 +1,51 @@
+# hsi-lithology-classification
+
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model checkpoints (too large for GitHub — stored on Google Drive)
+*.h5
+*.keras
+*.ckpt*
+*.pb
+saved_model/
+
+# Data files (downloaded at runtime or too large for GitHub)
+data/raw/
+data/processed/
+*.mat
+*.npy
+*.npz
+*.dat
+*.hdr
+*.bmp
+*.joblib
+
+# Experiment logs (TensorBoard)
+logs/
+checkpoints/
+
+# But DO commit results (plots, metrics CSVs)
+!experiments/results/

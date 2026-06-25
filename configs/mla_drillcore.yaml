@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────────────────────────
+# MLA Upscaling Drill Core Benchmark Configuration
+# ─────────────────────────────────────────────────────────────────
+# Geological dataset: 204 thick-sections from 49 drillholes
+# Coregistered VNIR-SWIR-MWIR-LWIR hyperspectral + MLA ground truth
+# Reference: Thiele et al. (2026), HZDR RODARE
+
+dataset:
+  name: "mla_drillcore"
+  # Data is hosted on RODARE (HZDR). The download script fetches the
+  # public subset or provides instructions for the full dataset.
+  url_data: "https://rodare.hzdr.de/record/2748/files/subset_hsi.h5"
+  url_labels: "https://rodare.hzdr.de/record/2748/files/subset_mla.h5"
+  num_bands: 450          # FENIX VNIR/SWIR sensor
+  num_classes: 21         # 20 mineral macro groups + Background
+  patch_size: 25           # Spatial patch size for CNN input
+  test_ratio: 0.20
+  val_ratio: 0.10
+
+preprocessing:
+  # FastICA dimensionality reduction 
+  reduction_method: "fastica"
+  n_components: 30
+  fastica:
+    algorithm: "parallel"
+    whiten: "unit-variance"
+    max_iter: 500
+    tol: 1.0e-4
+    fun: "logcosh"
+  normalize: true
+  normalize_method: "standard"
+
+model:
+  name: "baseline_cnn"
+  # Classification head parameters
+  dense_units: 256
+  dropout_fc1: 0.35
+  dropout_fc2: 0.30
+
+training:
+  epochs: 150
+  batch_size: 64
+  # Focal loss 
+  loss: "focal"
+  focal_gamma: 1.5
+  focal_alpha: "class_balanced"
+  # MixUp augmentation 
+  mixup: true
+  mixup_alpha: 0.2
+  optimizer: "adam"
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-4
+  lr_schedule: "cosine_decay"
+  warmup_epochs: 10
+  min_lr: 1.0e-6
+  early_stopping: true
+  patience: 20
+  monitor: "val_loss"
+  seed: 42
+
+evaluation:
+  cv_folds: 5
+  cv_stratified: true
+  metrics:
+    - "overall_accuracy"
+    - "average_accuracy"
+    - "kappa"
+    - "f1_macro"
+    - "f1_per_class"
+    - "confusion_matrix"
+
+paths:
+  data_dir: "/content/drive/MyDrive/hsi-experiments/data/raw/MLA"
+  checkpoint_dir: "/content/drive/MyDrive/hsi-experiments/checkpoints/mla_drillcore"
+  log_dir: "/content/drive/MyDrive/hsi-experiments/logs/mla_drillcore"
+  results_dir: "experiments/results"
