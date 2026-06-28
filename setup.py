@@ -8,7 +8,7 @@ setup(
     name="hsi-lithology-classification",
     version="1.0.0",
     description=(
-        "Multi-Scale CNN with Dilated Separable Convolutions "
+        "Baseline CNN showcase "
         "for Hyperspectral Image Classification of Geological Drill Cores"
     ),
     author="Suvarup Ghosh",
